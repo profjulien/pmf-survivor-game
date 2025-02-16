@@ -19,8 +19,40 @@ const questions = [
         question: "A competitor is working on a similar idea. How do you react?", 
         options: [
             { text: "Focus on differentiation (Costs 3 tokens)", tokens: -3, pmf: 2 },
-            { text: "Speed up development to beat them (Costs 4 tokens)", tokens: -4, pmf: 3 },
+            { text: "Speed up development (-4 tokens, 50% +3 PMF / 50% -1 PMF)", tokens: -4, pmf: "random" },
             { text: "Ignore them (No cost)", tokens: 0, pmf: -2 }
+        ]
+    },
+    { 
+        question: "Customers like the product but won’t pay. Next step?", 
+        options: [
+            { text: "Adjust pricing (Costs 2 tokens)", tokens: -2, pmf: 2 },
+            { text: "Offer freemium (-3 tokens, 50% +3 PMF / 50% -1 PMF)", tokens: -3, pmf: "random" },
+            { text: "Keep pricing the same (No cost)", tokens: 0, pmf: -1 }
+        ]
+    },
+    { 
+        question: "An investor offers funding, but they want fast growth. Accept?", 
+        options: [
+            { text: "Accept funding (0 tokens, 50% +3 PMF / 50% -2 PMF)", tokens: 0, pmf: "random" },
+            { text: "Negotiate better terms (Costs 2 tokens)", tokens: -2, pmf: 2 },
+            { text: "Reject and grow organically (Costs 2 tokens)", tokens: -2, pmf: 2 }
+        ]
+    },
+    { 
+        question: "Choosing a go-to-market strategy. Best approach?", 
+        options: [
+            { text: "Paid ads (Costs 3 tokens)", tokens: -3, pmf: 3 },
+            { text: "Partnerships (Costs 2 tokens)", tokens: -2, pmf: 2 },
+            { text: "Viral marketing (0 tokens, 50% +3 PMF / 50% -1 PMF)", tokens: 0, pmf: "random" }
+        ]
+    },
+    { 
+        question: "Investors push for fast growth, but unit economics are weak.", 
+        options: [
+            { text: "Raise more funding (0 tokens, 50% +3 PMF / 50% -2 PMF)", tokens: 0, pmf: "random" },
+            { text: "Focus on profitability (Costs 2 tokens)", tokens: -2, pmf: 2 },
+            { text: "Scale aggressively (No cost)", tokens: 0, pmf: -3 }
         ]
     }
 ];
@@ -68,7 +100,14 @@ function selectOption(index) {
     document.querySelectorAll(".option-button").forEach(btn => btn.disabled = true);
 
     tokens += selectedOption.tokens;
-    pmfScore += selectedOption.pmf;
+
+    if (selectedOption.pmf === "random") {
+        const randomOutcome = Math.random() < 0.5 ? 3 : -2;  // 50% chance
+        pmfScore += randomOutcome;
+        alert("Random outcome: " + (randomOutcome > 0 ? "+3 PMF!" : "-2 PMF!"));
+    } else {
+        pmfScore += selectedOption.pmf;
+    }
 
     document.getElementById('tokensLeft').innerText = tokens;
     document.getElementById('pmfScore').innerText = pmfScore;
