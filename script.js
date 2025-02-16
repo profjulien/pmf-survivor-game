@@ -19,7 +19,7 @@ const questions = [
         question: "A competitor is working on a similar idea. How do you react?", 
         options: [
             { text: "Focus on differentiation (Costs 3 tokens)", tokens: -3, pmf: 2 },
-            { text: "Speed up development (-4 tokens, 50% +3 PMF / 50% -1 PMF)", tokens: -4, pmf: "random" },
+            { text: "Speed up development (Costs 4 tokens)", tokens: -4, pmf: "random" },
             { text: "Ignore them (No cost)", tokens: 0, pmf: -2 }
         ]
     },
@@ -27,14 +27,14 @@ const questions = [
         question: "Customers like the product but won’t pay. Next step?", 
         options: [
             { text: "Adjust pricing (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Offer freemium (-3 tokens, 50% +3 PMF / 50% -1 PMF)", tokens: -3, pmf: "random" },
+            { text: "Offer freemium (Costs 3 tokens)", tokens: -3, pmf: "random" },
             { text: "Keep pricing the same (No cost)", tokens: 0, pmf: -1 }
         ]
     },
     { 
         question: "An investor offers funding, but they want fast growth. Accept?", 
         options: [
-            { text: "Accept funding (0 tokens, 50% +3 PMF / 50% -2 PMF)", tokens: 0, pmf: "random" },
+            { text: "Accept funding (No cost)", tokens: 0, pmf: "random" },
             { text: "Negotiate better terms (Costs 2 tokens)", tokens: -2, pmf: 2 },
             { text: "Reject and grow organically (Costs 2 tokens)", tokens: -2, pmf: 2 }
         ]
@@ -44,13 +44,13 @@ const questions = [
         options: [
             { text: "Paid ads (Costs 3 tokens)", tokens: -3, pmf: 3 },
             { text: "Partnerships (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Viral marketing (0 tokens, 50% +3 PMF / 50% -1 PMF)", tokens: 0, pmf: "random" }
+            { text: "Viral marketing (No cost)", tokens: 0, pmf: "random" }
         ]
     },
     { 
         question: "Investors push for fast growth, but unit economics are weak.", 
         options: [
-            { text: "Raise more funding (0 tokens, 50% +3 PMF / 50% -2 PMF)", tokens: 0, pmf: "random" },
+            { text: "Raise more funding (No cost)", tokens: 0, pmf: "random" },
             { text: "Focus on profitability (Costs 2 tokens)", tokens: -2, pmf: 2 },
             { text: "Scale aggressively (No cost)", tokens: 0, pmf: -3 }
         ]
@@ -86,7 +86,7 @@ function loadQuestion() {
     
     questions[currentQuestionIndex].options.forEach((option, index) => {
         let btn = document.createElement("button");
-        btn.innerText = option.text;
+        btn.innerText = option.text;  // PMF outcomes are no longer shown
         btn.onclick = () => selectOption(index);
         btn.classList.add("option-button");
         document.getElementById('options').appendChild(btn);
