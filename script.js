@@ -31,9 +31,15 @@ let pmfScore = 0;
 let teamName = "";
 
 function startGame() {
-    teamName = document.getElementById("teamInput").value.trim() || "Team Unknown";
-    document.getElementById("teamNameDisplay").innerText = teamName;
+    teamName = document.getElementById("teamInput").value.trim();
+    
+    if (teamName === "") {
+        alert("Please enter a team name!");
+        return;
+    }
 
+    document.getElementById("teamNameDisplay").innerText = teamName;
+    
     // Hide start screen and show game area
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameArea").style.display = "block";
@@ -75,7 +81,9 @@ function nextQuestion() {
     if (currentQuestionIndex < questions.length) {
         loadQuestion();
     } else {
-        document.getElementById('gameArea').innerHTML = "<h2>Game Over!</h2><p>Final PMF Score: " + pmfScore + "</p><p>Remaining Tokens: " + tokens + "</p>";
+        document.getElementById('gameArea').innerHTML = `<h2>Game Over!</h2>
+        <p>Final PMF Score: ${pmfScore}</p>
+        <p>Remaining Tokens: ${tokens}</p>`;
     }
 }
 
