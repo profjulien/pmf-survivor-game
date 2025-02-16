@@ -33,8 +33,12 @@ let teamName = "";
 function startGame() {
     teamName = document.getElementById("teamInput").value.trim() || "Team Unknown";
     document.getElementById("teamNameDisplay").innerText = teamName;
+
+    // Hide start screen and show game area
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameArea").style.display = "block";
+    document.getElementById("status").style.display = "block";
+
     loadQuestion();
 }
 
@@ -77,4 +81,5 @@ function nextQuestion() {
 
 window.onload = function() {
     document.getElementById("gameArea").style.display = "none";
+    document.getElementById("status").style.display = "none";
 };
