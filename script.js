@@ -22,28 +22,21 @@ const questions = [
             { text: "Speed up development to beat them (Costs 4 tokens)", tokens: -4, pmf: 3 },
             { text: "Ignore them (No cost)", tokens: 0, pmf: -2 }
         ]
-    },
-    { 
-        question: "You need to decide your go-to-market strategy.", 
-        options: [
-            { text: "Paid ads (Costs 3 tokens)", tokens: -3, pmf: 3 },
-            { text: "Partnerships (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Viral marketing (No cost, random outcome)", tokens: 0, pmf: "random" }
-        ]
-    },
-    { 
-        question: "An investor offers funding, but wants fast growth. Do you take it?", 
-        options: [
-            { text: "Accept and scale (No cost, random outcome)", tokens: 0, pmf: "random" },
-            { text: "Negotiate better terms (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Reject and focus on organic growth (Costs 2 tokens)", tokens: -2, pmf: 2 }
-        ]
     }
 ];
 
 let currentQuestionIndex = 0;
 let tokens = 10;
 let pmfScore = 0;
+let teamName = "";
+
+function startGame() {
+    teamName = document.getElementById("teamInput").value || "Team Unknown";
+    document.getElementById("teamName").innerText = teamName;
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("gameArea").style.display = "block";
+    loadQuestion();
+}
 
 function loadQuestion() {
     document.getElementById('questionText').innerText = questions[currentQuestionIndex].question;
@@ -59,29 +52,23 @@ function loadQuestion() {
 function selectOption(index) {
     const selectedOption = questions[currentQuestionIndex].options[index];
     tokens += selectedOption.tokens;
-
-    if (selectedOption.pmf === "random") {
-        const randomOutcome = Math.random() < 0.5 ? 3 : -1;  // 50% success chance
-        pmfScore += randomOutcome;
-        alert("Random outcome: " + (randomOutcome > 0 ? "+3 PMF!" : "-1 PMF!"));
-    } else {
-        pmfScore += selectedOption.pmf;
-    }
+    pmfScore += selectedOption.pmf;
 
     document.getElementById('tokensLeft').innerText = tokens;
     document.getElementById('pmfScore').innerText = pmfScore;
 
-    document.getElementById('nextBtn').disabled = false;
+    setTimeout(nextQuestion, 500); // Auto-advance after 0.5s delay
 }
 
 function nextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex < questions.length) {
         loadQuestion();
-        document.getElementById('nextBtn').disabled = true;
     } else {
         document.getElementById('gameArea').innerHTML = "<h2>Game Over!</h2><p>Final PMF Score: " + pmfScore + "</p><p>Remaining Tokens: " + tokens + "</p>";
     }
 }
 
-window.onload = loadQuestion;
+window.onload = function() {
+    document.getElementById("gameArea").style.display = "none";
+};
