@@ -8,12 +8,18 @@
 </head>
 <body>
     <div class="container">
-        <h1>Startup Survivor – The PMF Challenge</h1>
+        <div id="startScreen">
+            <h1>Startup Survivor – The PMF Challenge</h1>
+            <p>Enter your team name and press Start:</p>
+            <input type="text" id="teamInput" placeholder="Team Name">
+            <button onclick="startGame()">Start Game</button>
+        </div>
+        
         <div id="gameArea">
             <h2 id="questionText"></h2>
             <div id="options"></div>
-            <button id="nextBtn" onclick="nextQuestion()" disabled>Next</button>
         </div>
+
         <div id="status">
             <h3>Team: <span id="teamName">N/A</span></h3>
             <p>Tokens Left: <span id="tokensLeft">10</span></p>
