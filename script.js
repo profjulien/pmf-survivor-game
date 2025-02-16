@@ -1,64 +1,5 @@
-const questions = [
-    { 
-        question: "You have an idea but no validation. What do you do?", 
-        options: [
-            { text: "Run user interviews (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Build a quick MVP (Costs 3 tokens)", tokens: -3, pmf: 3 },
-            { text: "Launch immediately (No cost)", tokens: 0, pmf: -2 }
-        ]
-    },
-    { 
-        question: "Your MVP works, but users aren’t excited. What next?", 
-        options: [
-            { text: "Pivot based on feedback (Costs 3 tokens)", tokens: -3, pmf: 3 },
-            { text: "Improve marketing (Costs 2 tokens)", tokens: -2, pmf: 1 },
-            { text: "Ignore feedback and push forward (No cost)", tokens: 0, pmf: -2 }
-        ]
-    },
-    { 
-        question: "A competitor is working on a similar idea. How do you react?", 
-        options: [
-            { text: "Focus on differentiation (Costs 3 tokens)", tokens: -3, pmf: 2 },
-            { text: "Speed up development (Costs 4 tokens)", tokens: -4, pmf: "random" },
-            { text: "Ignore them (No cost)", tokens: 0, pmf: -2 }
-        ]
-    },
-    { 
-        question: "Customers like the product but won’t pay. Next step?", 
-        options: [
-            { text: "Adjust pricing (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Offer freemium (Costs 3 tokens)", tokens: -3, pmf: "random" },
-            { text: "Keep pricing the same (No cost)", tokens: 0, pmf: -1 }
-        ]
-    },
-    { 
-        question: "An investor offers funding, but they want fast growth. Accept?", 
-        options: [
-            { text: "Accept funding (No cost)", tokens: 0, pmf: "random" },
-            { text: "Negotiate better terms (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Reject and grow organically (Costs 2 tokens)", tokens: -2, pmf: 2 }
-        ]
-    },
-    { 
-        question: "Choosing a go-to-market strategy. Best approach?", 
-        options: [
-            { text: "Paid ads (Costs 3 tokens)", tokens: -3, pmf: 3 },
-            { text: "Partnerships (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Viral marketing (No cost)", tokens: 0, pmf: "random" }
-        ]
-    },
-    { 
-        question: "Investors push for fast growth, but unit economics are weak.", 
-        options: [
-            { text: "Raise more funding (No cost)", tokens: 0, pmf: "random" },
-            { text: "Focus on profitability (Costs 2 tokens)", tokens: -2, pmf: 2 },
-            { text: "Scale aggressively (No cost)", tokens: 0, pmf: -3 }
-        ]
-    }
-];
-
 let currentQuestionIndex = 0;
-let tokens = 10;
+let tokens = 15;  // Increased from 10
 let pmfScore = 0;
 let teamName = "";
 
@@ -86,7 +27,7 @@ function loadQuestion() {
     
     questions[currentQuestionIndex].options.forEach((option, index) => {
         let btn = document.createElement("button");
-        btn.innerText = option.text;  // PMF outcomes are no longer shown
+        btn.innerText = option.text;
         btn.onclick = () => selectOption(index);
         btn.classList.add("option-button");
         document.getElementById('options').appendChild(btn);
@@ -101,10 +42,14 @@ function selectOption(index) {
 
     tokens += selectedOption.tokens;
 
+    if (tokens < 0) {
+        endGame("You ran out of resources! Your startup failed.");
+        return;
+    }
+
     if (selectedOption.pmf === "random") {
-        const randomOutcome = Math.random() < 0.5 ? 3 : -2;  // 50% chance
+        const randomOutcome = Math.random() < 0.5 ? 3 : -2;
         pmfScore += randomOutcome;
-        alert("Random outcome: " + (randomOutcome > 0 ? "+3 PMF!" : "-2 PMF!"));
     } else {
         pmfScore += selectedOption.pmf;
     }
@@ -112,7 +57,7 @@ function selectOption(index) {
     document.getElementById('tokensLeft').innerText = tokens;
     document.getElementById('pmfScore').innerText = pmfScore;
 
-    setTimeout(nextQuestion, 800); // Auto-advance after 0.8 seconds
+    setTimeout(nextQuestion, 800);
 }
 
 function nextQuestion() {
@@ -120,10 +65,12 @@ function nextQuestion() {
     if (currentQuestionIndex < questions.length) {
         loadQuestion();
     } else {
-        document.getElementById('gameArea').innerHTML = `<h2>Game Over!</h2>
-        <p>Final PMF Score: ${pmfScore}</p>
-        <p>Remaining Tokens: ${tokens}</p>`;
+        endGame(`Game Over! Final PMF Score: ${pmfScore}, Remaining Tokens: ${tokens}`);
     }
+}
+
+function endGame(message) {
+    document.getElementById('gameArea').innerHTML = `<h2>${message}</h2>`;
 }
 
 window.onload = function() {
