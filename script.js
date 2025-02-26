@@ -1,24 +1,30 @@
 let currentQuestionIndex = 0;
-let tokens = 15;  // Ensures enough resources for strategic play
+let tokens = 15;  // Starting resources
 let pmfScore = 0;
 let teamName = "";
 
 function startGame() {
     teamName = document.getElementById("teamInput").value.trim();
-    
+
     if (teamName === "") {
         alert("Please enter a team name!");
         return;
     }
 
     document.getElementById("teamNameDisplay").innerText = teamName;
-    
-    // Hide start screen and show game area
+
+    // 🔹 Ensure the start screen disappears
     document.getElementById("startScreen").style.display = "none";
+    
+    // 🔹 Ensure game area & status become visible
     document.getElementById("gameArea").style.display = "block";
     document.getElementById("status").style.display = "block";
 
-    // 🚀 Ensure the first question loads
+    // 🔹 Explicitly log progress to debug
+    console.log("Game started: Team", teamName);
+    console.log("Game area should now be visible");
+
+    // 🚀 Load first question immediately
     loadQuestion();
 }
 
@@ -28,9 +34,12 @@ function loadQuestion() {
         return;
     }
 
+    // 🔹 Debugging log
+    console.log(`Loading question ${currentQuestionIndex + 1}`);
+
     document.getElementById('questionText').innerText = questions[currentQuestionIndex].question;
     document.getElementById('options').innerHTML = "";
-    
+
     questions[currentQuestionIndex].options.forEach((option, index) => {
         let btn = document.createElement("button");
         btn.innerText = option.text;
@@ -42,7 +51,7 @@ function loadQuestion() {
 
 function selectOption(index) {
     const selectedOption = questions[currentQuestionIndex].options[index];
-    
+
     // Disable all buttons to prevent multiple selections
     document.querySelectorAll(".option-button").forEach(btn => btn.disabled = true);
 
@@ -60,6 +69,9 @@ function selectOption(index) {
         pmfScore += selectedOption.pmf;
     }
 
+    // 🔹 Debugging logs
+    console.log(`Tokens left: ${tokens}, PMF Score: ${pmfScore}`);
+
     document.getElementById('tokensLeft').innerText = tokens;
     document.getElementById('pmfScore').innerText = pmfScore;
 
@@ -75,7 +87,9 @@ function endGame(message) {
     document.getElementById('gameArea').innerHTML = `<h2>${message}</h2>`;
 }
 
+// 🔹 Ensure proper visibility on page load
 window.onload = function() {
+    console.log("Page loaded, hiding game area.");
     document.getElementById("gameArea").style.display = "none";
     document.getElementById("status").style.display = "none";
 };
