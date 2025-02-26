@@ -1,5 +1,5 @@
 let currentQuestionIndex = 0;
-let tokens = 15;  // Increased from 10
+let tokens = 15;  // Ensures enough resources for strategic play
 let pmfScore = 0;
 let teamName = "";
 
@@ -18,10 +18,16 @@ function startGame() {
     document.getElementById("gameArea").style.display = "block";
     document.getElementById("status").style.display = "block";
 
+    // 🚀 Ensure the first question loads
     loadQuestion();
 }
 
 function loadQuestion() {
+    if (currentQuestionIndex >= questions.length) {
+        endGame(`Game Over! Final PMF Score: ${pmfScore}, Remaining Tokens: ${tokens}`);
+        return;
+    }
+
     document.getElementById('questionText').innerText = questions[currentQuestionIndex].question;
     document.getElementById('options').innerHTML = "";
     
@@ -62,11 +68,7 @@ function selectOption(index) {
 
 function nextQuestion() {
     currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
-        loadQuestion();
-    } else {
-        endGame(`Game Over! Final PMF Score: ${pmfScore}, Remaining Tokens: ${tokens}`);
-    }
+    loadQuestion();
 }
 
 function endGame(message) {
